@@ -1,0 +1,1 @@
+Place owner-approved local food photographs here. Current website images load from Unsplash URLs; see index.html and script.js to replace image URLs with assets/your-image.jpg.
