@@ -214,11 +214,17 @@ function cartLines(){
   });
 }
 
+function look(name){
+  // gives every dish its own crop (zoom / focus point) of its category photo so cards do not look identical
+  let h=5381;for(let i=0;i<name.length;i++)h=((h<<5)+h+name.charCodeAt(i))>>>0;
+  const z=(1.1+(h%8)*0.11).toFixed(2),ox=(h>>>3)%101,oy=(h>>>9)%101;
+  return `transform-origin:${ox}% ${oy}%;transform:scale(${z})`;
+}
 function card(d){
   const buy=d.half!=null
     ?`<div class="size-btns"><button class="size-btn" data-id="${d.id}" data-size="H">Half<b>₹${d.half}</b></button><button class="size-btn" data-id="${d.id}" data-size="F">Full<b>₹${d.price}</b></button></div>`
     :`<div class="buy-row"><span class="price">₹${d.price}</span><button class="add-btn" data-id="${d.id}" data-size="F">+ Add</button></div>`;
-  return `<article class="food-card"><div class="food-photo"><img loading="lazy" src="assets/menu/${d.img}.jpg" alt="${d.name}" width="480" height="480"></div><div class="food-body"><div class="food-head"><span class="dot ${d.veg?'veg':'nv'}" title="${d.veg?'Veg':'Non-veg'}"></span><h3>${d.name}</h3></div>${d.desc?`<p>${d.desc}</p>`:''}<div class="food-buy">${buy}</div></div></article>`;
+  return `<article class="food-card"><div class="food-photo"><img loading="lazy" src="assets/menu/${d.img}.jpg" alt="${d.name}" width="480" height="480" style="${look(d.name)}"></div><div class="food-body"><div class="food-head"><span class="dot ${d.veg?'veg':'nv'}" title="${d.veg?'Veg':'Non-veg'}"></span><h3>${d.name}</h3></div>${d.desc?`<p>${d.desc}</p>`:''}<div class="food-buy">${buy}</div></div></article>`;
 }
 
 function render(){
@@ -272,4 +278,9 @@ document.getElementById('checkout').onclick=()=>{
 document.querySelector('.menu-toggle').onclick=()=>document.getElementById('nav').classList.toggle('open');
 document.querySelectorAll('#nav a').forEach(a=>a.onclick=()=>document.getElementById('nav').classList.remove('open'));
 document.getElementById('year').textContent=new Date().getFullYear();
+(function(){const v=document.getElementById('heroVideo');if(!v)return;
+ if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches){v.pause();v.removeAttribute('autoplay');return}
+ const p=v.play();if(p&&p.catch)p.catch(()=>{});
+ document.addEventListener('visibilitychange',()=>{document.hidden?v.pause():v.play().catch(()=>{})});
+})();
 render();
