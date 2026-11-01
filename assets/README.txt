@@ -1,1 +1,1 @@
-Place owner-approved local food photographs here. Current website images load from Unsplash URLs; see index.html and script.js to replace image URLs with assets/your-image.jpg.
+menu/ holds the dish photos used on the website (14 JPGs, 480x480). Replace any file with a sharper photo of the same name to improve it. Hero and 'House Special' section images still load from Unsplash with a local fallback.

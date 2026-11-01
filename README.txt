@@ -4,7 +4,7 @@ Files:
 - index.html: website structure and content
 - style.css: responsive design
 - script.js: menu filtering, cart and WhatsApp checkout
-- assets/: folder reserved for locally hosted images (currently images are loaded from Unsplash URLs in the HTML/JS)
+- assets/menu/: dish photos (cropped from the restaurant's own menu photos). Each menu category uses a representative photo; replace a file with a better photo of the same name to update it. pickImg() in script.js decides which photo each dish uses.
 
 HOW TO USE:
 1. Extract this ZIP.

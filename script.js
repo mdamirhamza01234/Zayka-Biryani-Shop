@@ -176,8 +176,25 @@ const sections=[
 
 const NONVEG=/chicken|mutton|egg|omelette|non[- ]?veg/i;
 const items=[];
+function pickImg(cat,name){
+  const n=name.toLowerCase();
+  switch(cat){
+    case 'biryani': return /rice|pulao/.test(n)?'thali':'biryani';
+    case 'nvcurry': if(/tikka masala|tandoori/.test(n))return 'curry3'; if(/kadahi|do pyaza|dehati|handi|mutton|egg|omelette/.test(n))return 'curry2'; return 'curry1';
+    case 'vcurry': if(/malai|kofta|methi/.test(n))return 'curry1'; if(/tikka masala/.test(n))return 'curry3'; return 'paneer';
+    case 'tandoor': return /roti|naan|kulcha|paratha/.test(n)?'bread':'tikka';
+    case 'thali': return 'thali';
+    case 'chinese': return 'chilli';
+    case 'noodles': return 'noodles';
+    case 'roll': return 'rolls';
+    case 'munch': return 'pakora';
+    case 'soup': return 'soup';
+    case 'drinks': return 'drink';
+    default: return 'salad';
+  }
+}
 sections.forEach(s=>s.items.forEach(([name,price,half,desc])=>{
-  items.push({id:items.length,cat:s.key,name,price,half:half==null?null:half,desc:desc||'',veg:!NONVEG.test(name)});
+  items.push({id:items.length,cat:s.key,name,price,half:half==null?null:half,desc:desc||'',veg:!NONVEG.test(name),img:pickImg(s.key,name)});
 }));
 
 let cart={};            // key "id-F" or "id-H" -> quantity
@@ -198,8 +215,10 @@ function cartLines(){
 }
 
 function card(d){
-  const rows=d.half!=null?[['F','Full',d.price],['H','Half',d.half]]:[['F','',d.price]];
-  return `<article class="food-card"><div class="food-head"><span class="dot ${d.veg?'veg':'nv'}" title="${d.veg?'Veg':'Non-veg'}"></span><h3>${d.name}</h3></div>${d.desc?`<p>${d.desc}</p>`:''}<div class="food-sizes">${rows.map(([s,l,p])=>`<div class="size-row"><span>${l?l+' ':''}<b class="price">₹${p}</b></span><button class="add-btn" data-id="${d.id}" data-size="${s}">+ Add</button></div>`).join('')}</div></article>`;
+  const buy=d.half!=null
+    ?`<div class="size-btns"><button class="size-btn" data-id="${d.id}" data-size="H">Half<b>₹${d.half}</b></button><button class="size-btn" data-id="${d.id}" data-size="F">Full<b>₹${d.price}</b></button></div>`
+    :`<div class="buy-row"><span class="price">₹${d.price}</span><button class="add-btn" data-id="${d.id}" data-size="F">+ Add</button></div>`;
+  return `<article class="food-card"><div class="food-photo"><img loading="lazy" src="assets/menu/${d.img}.jpg" alt="${d.name}" width="480" height="480"></div><div class="food-body"><div class="food-head"><span class="dot ${d.veg?'veg':'nv'}" title="${d.veg?'Veg':'Non-veg'}"></span><h3>${d.name}</h3></div>${d.desc?`<p>${d.desc}</p>`:''}<div class="food-buy">${buy}</div></div></article>`;
 }
 
 function render(){
@@ -226,7 +245,7 @@ function updateCart(){
   document.getElementById('cartItems').innerHTML=lines.map(l=>`<div class="cart-row"><span>${l.name}<br>₹${l.price} × ${l.qty}</span><span class="cart-right">₹${l.price*l.qty}<span class="qty"><button data-dec="${l.key}" aria-label="Decrease">−</button><button data-inc="${l.key}" aria-label="Increase">+</button></span><button data-remove="${l.key}">Remove</button></span></div>`).join('');
 }
 
-grid.addEventListener('click',e=>{const b=e.target.closest('.add-btn');if(b)addToCart(+b.dataset.id,b.dataset.size)});
+grid.addEventListener('click',e=>{const b=e.target.closest('.add-btn,.size-btn');if(b)addToCart(+b.dataset.id,b.dataset.size)});
 document.getElementById('cartItems').addEventListener('click',e=>{
   const b=e.target.closest('button');if(!b)return;
   if(b.dataset.inc)cart[b.dataset.inc]++;
