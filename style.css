@@ -93,3 +93,33 @@
 .hero-stamp{animation:none;opacity:1}
 }
 @media(max-width:650px){.hero .hero-bg{background:linear-gradient(180deg,rgba(25,15,9,.7) 0%,rgba(25,15,9,.78) 100%)}}
+
+/* ===== Big-photo menu cards ===== */
+.food-grid{grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:20px}
+.food-card{flex-direction:column;align-items:stretch}
+.food-card:hover{transform:translateY(-5px);box-shadow:0 16px 38px #3c261422}
+.food-photo{width:100%;aspect-ratio:4/3;flex:none;position:relative}
+.food-photo img{transition:transform .5s}
+.food-card:hover .food-photo img{filter:saturate(1.08)}
+.food-body{padding:15px 16px 16px}
+.food-head h3{font-size:18px}
+.food-buy{padding-top:14px}
+.size-btn{padding:9px 6px}
+@media(max-width:900px){.food-grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}}
+@media(max-width:650px){
+.food-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+.food-card{flex-direction:column}
+.food-photo{width:100%;aspect-ratio:1/1}
+.food-body{padding:10px 10px 11px}
+.food-head{gap:6px}
+.food-head .dot{margin-top:3px;width:11px;height:11px}
+.food-head h3{font-size:14px;line-height:1.25}
+.food-body>p{display:none}
+.food-buy{padding-top:9px}
+.price{font-size:15px}
+.add-btn{padding:8px 10px;font-size:11px}
+.size-btns{gap:5px}
+.size-btn{padding:6px 2px;font-size:9px}
+.size-btn b{font-size:13px}
+.menu-cat{margin:26px 0 12px}
+}

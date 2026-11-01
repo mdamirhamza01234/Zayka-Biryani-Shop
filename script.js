@@ -197,6 +197,8 @@ sections.forEach(s=>s.items.forEach(([name,price,half,desc])=>{
   items.push({id:items.length,cat:s.key,name,price,half:half==null?null:half,desc:desc||'',veg:!NONVEG.test(name),img:pickImg(s.key,name)});
 }));
 
+const PHOTO={"Chicken Dum Biryani":4224314,"Chicken Leg Dum Biryani":28674660,"Special Chicken Dum Biryani":9609860,"Mutton Dum Biryani":14731625,"Special Mutton Dum Biryani":5695615,"Egg Biryani":31537385,"Veg Biryani":12669168,"Paneer Biryani":8250738,"Special Veg Biryani":5410401,"Special Paneer Biryani":8846746,"Steam Rice":4595313,"Jeera Rice":24206918,"Veg Pulao":36652961,"Special Dry Fruit Pulao":30748996,"Chicken Butter Masala":37295815,"Chicken Masala":35158690,"Chicken Kadahi":20408442,"Chicken Do Pyaza":9609844,"Chicken Korma":6113813,"Chicken Dehati":9609849,"Chicken Curry":10445627,"Chicken Bhartha":9397205,"Chicken Lababdar":10615283,"Chicken Handi":20408432,"Chicken Tikka Masala":12737809,"Tandoori Chicken Masala":7625056,"Mutton Dehati":29684989,"Mutton Korma":28674568,"Mutton Curry":28674690,"Egg Curry":35071817,"Egg Do Pyaza":35267285,"Omelette Curry":34217293,"Paneer Butter Masala":9609838,"Paneer Do Pyaza":12737805,"Paneer Kadhai":12737816,"Mutter Paneer":35993886,"Paneer Handi":11115801,"Paneer Lababdar":11188417,"Paneer Kolhapuri":29685056,"Sahi Paneer":12737799,"Paneer Dhaniya Adraki":36460902,"Mushroom Masala":35041661,"Mushroom Do Pyaza":35041663,"Mushroom Kadhai":35041660,"Mushroom Mutter":34217288,"Paneer Tikka Masala":30858420,"Malai Kofta":36343375,"Veg Kofta":36651768,"Aaloo Dum Kashmiri":33643313,"Methi Mutter Malai":28674562,"Mix Veg":10508207,"Chana Dal Tadka":30203314,"Tandoori Roti (Plain)":12737800,"Tandoori Roti (Butter)":12737660,"Tawa Roti (Plain)":12427834,"Tawa Roti (Butter)":1117862,"Naan (Plain)":28674556,"Naan (Butter)":20446390,"Garlic Naan":35066813,"Masala Kulcha":12737919,"Paneer Kulcha":10337726,"Laccha Paratha":35066812,"Paneer Tikka":33430556,"Mushroom Tikka":8414639,"Chicken Tikka":29173114,"Chicken Chatpata Tikka":12312104,"Chicken Garlic Tikka":6522616,"Chicken Malai Tikka":20702403,"Chicken Boti Kabab":38579058,"Chicken Reshmi Kabab":37080242,"Chicken Tandoori":36895285,"Zayka Special Chicken":29173124,"Chicken Afghani":29173119,"Veg Deluxe Thali":32797056,"Veg Premium Thali":36885763,"Non-Veg Deluxe Thali":10078270,"Non-Veg Premium Thali":35539324,"Paneer Chilly":29631468,"Paneer Hot Garlic":29631461,"Paneer Manchurian":31783383,"Paneer Ginger":35779075,"Paneer 65":8585763,"Veg Manchurian":29631489,"Mushroom Chilly":28445826,"Mushroom Hot Garlic":35066808,"Crispy Baby Corn":31150219,"Chicken Chilli Boneless":28445829,"Chicken Chilly With Bone":35071815,"Chicken Hot Garlic":35071822,"Chicken Manchurian":29631426,"Chicken Lollipop":29631422,"Veg Chowmein":7138913,"Paneer Chowmein":5848496,"Mushroom Chowmein":2764905,"Baby Corn Chowmein":13015748,"Mixed Veg Chowmein":28445826,"Chicken Chowmein":34170982,"Egg Chowmein":28445829,"Mixed Non-Veg Chowmein":34170982,"Veg Fried Rice":3926124,"Paneer Fried Rice":31783383,"Mushroom Fried Rice":8992927,"Baby Corn Fried Rice":30392941,"Mixed Veg Fried Rice":32489477,"Chicken Fried Rice":19792090,"Egg Fried Rice":37241099,"Mixed Non-Veg Fried Rice":7986352,"Veg Roll":29173104,"Paneer Roll":2764885,"Double Paneer Roll":12737663,"Single Egg Roll":11136408,"Double Egg Roll":2955819,"Chicken Roll":12737661,"Double Chicken Roll":33430554,"Single Egg Paneer Roll":2903387,"Double Egg Paneer Roll":12737921,"Single Egg Chicken Roll":9624298,"Double Egg Chicken Roll":860620,"Veg Pakora":29547418,"Paneer Pakora":8585763,"Cheese Pakora":31150219,"Egg Pakora":38298052,"Chicken Pakora":35123974,"Veg Cutlet":30570738,"Paneer Cutlet":9738980,"Chicken Cutlet":6419734,"Chicken Egg Devil":13220364,"Cream of Tomato Soup":27098511,"Veg Hot N Sour Soup":8738017,"Veg Sweet Corn Soup":6896516,"Veg Manchow Soup":34389369,"Lemon Coriander Soup":13788765,"Chicken Hot N Sour Soup":6646157,"Chicken Sweet Corn Soup":29850843,"Chicken Manchow Soup":8601410,"Cold Drinks":4113653,"Masala Cold Drinks":33450363,"Lemon Soda":5946627,"Masala Soda":316891,"Coffee":37454113,"Green Salad":1555814,"Onion Salad":35287415,"Raita":29699511};
+const photoUrl=(id,w,h)=>`https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=${w}&h=${h}`;
 let cart={};            // key "id-F" or "id-H" -> quantity
 let filter='all';       // category key
 let vegMode='all';      // all | veg | nv
@@ -215,18 +217,21 @@ function cartLines(){
 }
 
 function look(name){
-  // gives every dish its own crop (zoom / focus point) of its category photo so cards do not look identical
+  // fallback only: own crop (zoom / focus) of the local category photo
   let h=5381;for(let i=0;i<name.length;i++)h=((h<<5)+h+name.charCodeAt(i))>>>0;
-  const z=(1.1+(h%8)*0.11).toFixed(2),ox=(h>>>3)%101,oy=(h>>>9)%101;
+  const z=(1+(h%4)*0.07).toFixed(2),ox=(h>>>3)%101,oy=(h>>>9)%101;
   return `transform-origin:${ox}% ${oy}%;transform:scale(${z})`;
 }
 function card(d){
   const buy=d.half!=null
     ?`<div class="size-btns"><button class="size-btn" data-id="${d.id}" data-size="H">Half<b>₹${d.half}</b></button><button class="size-btn" data-id="${d.id}" data-size="F">Full<b>₹${d.price}</b></button></div>`
     :`<div class="buy-row"><span class="price">₹${d.price}</span><button class="add-btn" data-id="${d.id}" data-size="F">+ Add</button></div>`;
-  return `<article class="food-card"><div class="food-photo"><img loading="lazy" src="assets/menu/${d.img}.jpg" alt="${d.name}" width="480" height="480" style="${look(d.name)}"></div><div class="food-body"><div class="food-head"><span class="dot ${d.veg?'veg':'nv'}" title="${d.veg?'Veg':'Non-veg'}"></span><h3>${d.name}</h3></div>${d.desc?`<p>${d.desc}</p>`:''}<div class="food-buy">${buy}</div></div></article>`;
+  const pid=PHOTO[d.name];
+  const src=pid?photoUrl(pid,560,420):`assets/menu/${d.img}.jpg`;
+  const style=pid?'':` style="${look(d.name)}"`;
+  const onerr=pid?` onerror="this.onerror=null;this.src='assets/menu/${d.img}.jpg';this.style.cssText='${look(d.name)}'"`:'';
+  return `<article class="food-card"><div class="food-photo"><img loading="lazy" decoding="async" src="${src}" alt="${d.name}" width="560" height="420"${style}${onerr}></div><div class="food-body"><div class="food-head"><span class="dot ${d.veg?'veg':'nv'}" title="${d.veg?'Veg':'Non-veg'}"></span><h3>${d.name}</h3></div>${d.desc?`<p>${d.desc}</p>`:''}<div class="food-buy">${buy}</div></div></article>`;
 }
-
 function render(){
   const q=document.getElementById('search').value.trim().toLowerCase();
   let html='';

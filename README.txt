@@ -4,7 +4,8 @@ Files:
 - index.html: website structure and content
 - style.css: responsive design
 - script.js: menu filtering, cart and WhatsApp checkout
-- assets/menu/: dish photos (cropped from the restaurant's own menu photos). Each menu category uses a representative photo; replace a file with a better photo of the same name to update it. pickImg() in script.js decides which photo each dish uses.
+- Dish photos: every dish has its own photo loaded from Pexels (free licence) - see the PHOTO list in script.js. assets/menu/ holds local backup photos shown only if a Pexels photo fails to load. To use your own photo for a dish, put it in assets/ and change that dish's entry.
+- assets/menu/: backup dish photos (cropped from the restaurant's own menu photos). Each menu category uses a representative photo; replace a file with a better photo of the same name to update it. pickImg() in script.js decides which photo each dish uses.
 
 HOW TO USE:
 1. Extract this ZIP.
